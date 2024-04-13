@@ -3,8 +3,11 @@ syntax = "proto3";
 package calculator;
 
 service Calculator {
-rpc Add(CalculationRequest) returns (CalculationResponse);
-rpc Divide(CalculationRequest) returns (CalculationResponse);
+  rpc Add(CalculationRequest) returns (CalculationResponse);
+  rpc Divide(CalculationRequest) returns (CalculationResponse);
+  rpc Subtract(CalculationRequest) returns (CalculationResponse);
+  rpc Multiply(CalculationRequest) returns (CalculationResponse);
+ /* rpc PerformOperation(CalculationOperation) returns (CalculationResponse);*/
 }
 
 message CalculationRequest {
@@ -24,3 +27,14 @@ message GetCountRequest {}
 message CounterResponse {
   uint64 count = 1;
 }
+/*
+message CalculationOperation {
+  enum Operation {
+    ADD = 0;
+    SUBTRACT = 1;
+    MULTIPLY = 2;
+    DIVIDE = 3;
+  }
+  CalculationRequest request = 1;
+  Operation operation = 2;
+}*/
