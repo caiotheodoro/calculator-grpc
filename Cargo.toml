@@ -10,6 +10,8 @@ tonic = "0.11"
 tokio = { version = "1", features = ['full'] }
 prost = "0.12"
 tonic-reflection = "0.11"
+tonic-web = "0.11"
+tower-http = { version = "0.4", features = ["cors"] }
 
 [build-dependencies]
 tonic-build = "0.11"
