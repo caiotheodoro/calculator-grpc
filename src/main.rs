@@ -23,6 +23,34 @@ impl CalculatorService {
     }
 }
 
+fn process_operation(
+    operation: &str,
+    a: i64,
+    b: i64,
+) -> Result<tonic::Response<proto::CalculationResponse>, tonic::Status> {
+    match operation {
+        "add" => Ok(tonic::Response::new(proto::CalculationResponse {
+            result: a + b,
+        })),
+        "subtract" => Ok(tonic::Response::new(proto::CalculationResponse {
+            result: a - b,
+        })),
+        "multiply" => Ok(tonic::Response::new(proto::CalculationResponse {
+            result: a * b,
+        })),
+        "divide" => {
+            if b == 0 {
+                Err(tonic::Status::invalid_argument("Cannot divide by zero!"))
+            } else {
+                Ok(tonic::Response::new(proto::CalculationResponse {
+                    result: a / b,
+                }))
+            }
+        }
+        _ => Err(tonic::Status::invalid_argument("Invalid operation")),
+    }
+}
+
 #[tonic::async_trait]
 impl Calculator for CalculatorService {
     async fn add(
@@ -32,11 +60,7 @@ impl Calculator for CalculatorService {
         let input = request.get_ref();
         self.increment_counter().await;
 
-        let response = proto::CalculationResponse {
-            result: input.a + input.b,
-        };
-
-        Ok(tonic::Response::new(response))
+        process_operation("add", input.a, input.b)
     }
     async fn divide(
         &self,
@@ -48,11 +72,7 @@ impl Calculator for CalculatorService {
             return Err(tonic::Status::invalid_argument("Cannot divide by zero!"));
         }
 
-        let response = proto::CalculationResponse {
-            result: input.a / input.b,
-        };
-
-        Ok(tonic::Response::new(response))
+        process_operation("divide", input.a, input.b)
     }
     async fn subtract(
         &self,
@@ -61,11 +81,7 @@ impl Calculator for CalculatorService {
         let input = request.get_ref();
         self.increment_counter().await;
 
-        let response = proto::CalculationResponse {
-            result: input.a - input.b,
-        };
-
-        Ok(tonic::Response::new(response))
+        process_operation("subtract", input.a, input.b)
     }
     async fn multiply(
         &self,
@@ -75,11 +91,7 @@ impl Calculator for CalculatorService {
 
         let input = request.get_ref();
 
-        let response = proto::CalculationResponse {
-            result: input.a * input.b,
-        };
-
-        Ok(tonic::Response::new(response))
+        process_operation("multiply", input.a, input.b)
     }
 }
 
